@@ -1,0 +1,59 @@
+# docker-compose build --parallel --no-cache --quiet && docker-compose up --detach
+# docker-compose down --timeout 1 --volumes --rmi all
+
+version: "3.8"
+
+services:
+
+  demo1:
+    image: demo1
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: demo1
+    volumes:
+      - ./demo1-Round-Robin/round-robin.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy_params:/etc/nginx/conf.d/proxy_params:ro
+    ports:
+      - 8011:80
+
+  demo2-hash:
+    image: demo2-hash
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: demo2-hash
+    volumes:
+      - ./demo2-Hashing/hash.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy_params:/etc/nginx/conf.d/proxy_params:ro
+    ports:
+      - 8021:80
+
+  demo2-ip-hash:
+    image: demo2-ip-hash
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: demo2-ip-hash
+    volumes:
+      - ./demo2-Hashing/ip-hash.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy_params:/etc/nginx/conf.d/proxy_params:ro
+    ports:
+      - 8022:80
+
+  demo3:
+    image: demo3
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: demo3
+    volumes:
+      - ./demo3-Least-Connections/least-connections.conf:/etc/nginx/conf.d/default.conf:rw
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./proxy_params:/etc/nginx/conf.d/proxy_params:ro
+      - ./htpasswd:/etc/nginx/conf.d/htpasswd:ro
+    ports:
+      - 8031:80
