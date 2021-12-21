@@ -42,7 +42,10 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy_params:/etc/nginx/conf.d/proxy_params:ro
     ports:
-      - 8022:80
+      - target: 80
+        published: 8022
+        protocol: tcp
+        mode: host
 
   demo3:
     image: demo3
